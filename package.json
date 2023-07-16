@@ -9,6 +9,6 @@
   "author": "Hyunjeong Park",
   "license": "ISC",
   "devDependencies": {
-    "showdown": "^2.1.0"
+    "octokit": "^3.0.0"
   }
 }
