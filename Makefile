@@ -32,7 +32,7 @@ handle_image: exit_if_git_tag_not_defined
 	docker buildx build \
 	${BUILD_IMAGE_OPTION} \
 	--platform linux/amd64 \
-	-t ${REGISTRY_PREFIX_MANIFEST_GENERATOR}/manifest-generator:${GIT_TAG} \
+	-t ${REGISTRY_PREFIX_DOC_PUBLISHER}/doc-publisher:${GIT_TAG} \
 	-f ./Dockerfile .
 
 # Need GIT_TAG
@@ -48,12 +48,17 @@ TEMPLATES_PATH := ${PWD}/templates
 OUTPUT_PATH := ${PWD}/output
 
 
-# Should call validate_openapis via ${MAKE}, unless the rules use the old yamls instead of the generated newly
 generate_markdown: _prepare
 	@python src/__main__.py \
 		-im ${INPUT_SAMPLES_PATH}/markdown/MANIFEST.md \
 		-o ${OUTPUT_PATH} && \
 	echo ${CYAN}"Generation a html of a markdown completed"${COLOR_OFF}
+
+generate_openapis: _prepare
+	@python src/__main__.py \
+		-io ${INPUT_SAMPLES_PATH}/openapi \
+		-o ${OUTPUT_PATH} && \
+	echo ${CYAN}"Generation swagger, redoc of the openapis completed"${COLOR_OFF}
 
 _prepare:
 	@rm -rf ${OUTPUT_PATH} && \

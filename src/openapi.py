@@ -34,6 +34,7 @@ def __load_yaml(file_path: str) -> dict:
 
 
 def __generate(media_type: str, template_path: str, output_path: str, app: str, title: str):
+    template_path = os.path.join(template_path, media_type)
     output_path = os.path.join(output_path, app)
 
     if not os.path.exists(output_path):
