@@ -1,0 +1,810 @@
+openapi: 3.0.3
+info:
+  title: My Cluster API Specification
+  description: "***The following is a description of backends exposed by My Cluster\
+    \ API Gateway :***\n\r\n## app : dockebi\r\nversion : *latest*\r\n\r\nA service\
+    \ for arbitrary testing\n"
+  version: generater_test
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: dockebi | stuff
+    description: '**A resource for arbitrary testing which**
+
+      - CRUD+LIST REST API test
+
+      - OpenAPI Spec test
+
+      - Logging format test
+
+      - KrakenD configuration field test
+
+      - Manifest generator sanity test
+
+      - Integration testing kit test
+
+      '
+  - name: dockebi | kafka/admin
+    description: A resource for Kafka Admin testing includes topic managements.
+  - name: dockebi | kafka/producer
+    description: A resource for Kafka Producer testing includes message sending.
+  - name: dockebi | kafka/consumer
+    description: A resource for Kafka Consumer testing includes message receiving.
+paths:
+  /__echo/{dummy}:
+    get:
+      parameters:
+        - name: dummy
+          in: path
+          required: true
+          schema:
+            type: string
+            example: hello
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - apigw | apigw
+      security:
+        - apiKeyAuth: []
+  /dockebi/v1/stuff:
+    get:
+      summary: List all stuffs or search stuffs by name
+      operationId: get|stuff
+      parameters:
+        - description: stuff name
+          explode: true
+          in: query
+          name: name
+          required: false
+          schema:
+            example: stuff_name_#1
+            type: string
+          style: form
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  resultCode:
+                    type: string
+                    example: '0000'
+                  result:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/dockebi_Stuff'
+          description: Processed successfully
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | stuff
+      security:
+        - apiKeyAuth: []
+    post:
+      summary: Create a stuff
+      operationId: post|stuff
+      parameters:
+        - $ref: '#/components/parameters/dockebi_XDummyHeader'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dockebi_Stuff'
+        required: true
+        x-body-name: stuff
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  resultCode:
+                    type: string
+                    example: '0000'
+                  result:
+                    type: object
+                    properties:
+                      id_:
+                        type: string
+                        description: Created stuff ID
+                        example: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | stuff
+      security:
+        - apiKeyAuth: []
+  /dockebi/v1/stuff/{id_}:
+    put:
+      summary: Update a stuff by id_
+      operationId: put|stuff_by_id
+      parameters:
+        - $ref: '#/components/parameters/dockebi_PathStuffId'
+        - $ref: '#/components/parameters/dockebi_XDummyHeader'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dockebi_Stuff'
+        required: true
+        x-body-name: stuff
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  resultCode:
+                    type: string
+                    example: '0000'
+                  result:
+                    type: object
+                    properties:
+                      id_:
+                        type: string
+                        description: Updated stuff ID
+                        example: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | stuff
+      security:
+        - apiKeyAuth: []
+    delete:
+      summary: Delete a stuff by id_
+      operationId: delete|stuff_by_id
+      parameters:
+        - $ref: '#/components/parameters/dockebi_PathStuffId'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  resultCode:
+                    type: string
+                    example: '0000'
+                  result:
+                    type: object
+                    properties:
+                      id_:
+                        type: string
+                        description: Deleted stuff ID
+                        example: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | stuff
+      security:
+        - apiKeyAuth: []
+    get:
+      summary: Get a stuff by id_
+      operationId: get|stuff_by_id
+      parameters:
+        - $ref: '#/components/parameters/dockebi_PathStuffId'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              schema:
+                properties:
+                  resultCode:
+                    type: string
+                    example: '0000'
+                  result:
+                    type: object
+                    $ref: '#/components/schemas/dockebi_Stuff'
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | stuff
+      security:
+        - apiKeyAuth: []
+  /dockebi/v1/error/400:
+    get:
+      summary: Raise status code 400 error
+      operationId: get|error_by_status_code400
+      tags:
+        - dockebi | error
+      responses:
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+  /dockebi/v1/error/500:
+    get:
+      summary: Raise status code 500 error
+      operationId: get|error_by_status_code500
+      tags:
+        - dockebi | error
+      responses:
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+  /dockebi/v1/kafka/admin/topic:
+    post:
+      summary: Create a topic
+      operationId: post|kafka/admin/topic
+      parameters:
+        - $ref: '#/components/parameters/dockebi_XDummyHeader'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dockebi_KafkaTopic'
+        required: true
+        x-body-name: kafka_topic
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              example:
+                resultCode: '0000'
+                result: null
+              schema:
+                properties:
+                  resultCode:
+                    example: '0000'
+                    type: string
+                  result:
+                    type: object
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+    get:
+      summary: List topics
+      operationId: get|kafka/admin/topic
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              example:
+                resultCode: '0000'
+                result:
+                  - topic#1
+                  - topic#2
+              schema:
+                properties:
+                  resultCode:
+                    example: '0000'
+                    type: string
+                  result:
+                    type: object
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+  /dockebi/v1/kafka/admin/topic/{name}:
+    delete:
+      summary: Delete a topic by name
+      operationId: delete|kafka/admin/topic_by_name
+      parameters:
+        - description: topic name
+          in: path
+          name: name
+          required: true
+          schema:
+            example: A_SAMPLE_TOPIC
+            type: string
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: Deleted topic details
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                resultCode: '0000'
+                result:
+                  name: my-topic
+                  num_partitions: 3
+                  replication_factor: 1
+                  creation_time: 1652345678
+                  config:
+                    cleanup.policy: delete
+                    compression.type: gzip
+                    min.insync.replicas: 1
+                    retention.ms: 604800000
+                    segment.bytes: 1073741824
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+    get:
+      summary: Details of a topic given by name
+      operationId: get|kafka/admin/topic_by_name
+      parameters:
+        - description: topic name
+          in: path
+          name: name
+          required: true
+          schema:
+            example: A_SAMPLE_TOPIC
+            type: string
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: topic details
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                resultCode: '0000'
+                result:
+                  name: my-topic
+                  num_partitions: 3
+                  replication_factor: 1
+                  creation_time: 1652345678
+                  config:
+                    cleanup.policy: delete
+                    compression.type: gzip
+                    min.insync.replicas: 1
+                    retention.ms: 604800000
+                    segment.bytes: 1073741824
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+  /dockebi/v1/kafka/admin/consumer-group:
+    get:
+      summary: List consumer groups
+      operationId: get|kafka/admin/consumer-group
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              example:
+                resultCode: '0000'
+                result:
+                  - consumer-group#1
+                  - consumer-group#2
+              schema:
+                properties:
+                  resultCode:
+                    example: '0000'
+                    type: string
+                  result:
+                    type: object
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+  /dockebi/v1/kafka/admin/cluster:
+    get:
+      summary: Describe the kafka cluster
+      operationId: get|kafka/admin/cluster
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              example:
+                resultCode: '0000'
+                result: {}
+              schema:
+                properties:
+                  resultCode:
+                    example: '0000'
+                    type: string
+                  result:
+                    type: object
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/admin
+      security:
+        - apiKeyAuth: []
+      parameters:
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+  /dockebi/v1/kafka/producer/message:
+    post:
+      summary: Send a message to a targeted topic
+      operationId: post|kafka/producer/message
+      parameters:
+        - $ref: '#/components/parameters/dockebi_XDummyHeader'
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/dockebi_KafkaMessage'
+        required: true
+        x-body-name: kafka_message
+      responses:
+        '200':
+          description: Processed successfully
+          content:
+            application/json:
+              example:
+                resultCode: '0000'
+                result: null
+              schema:
+                properties:
+                  resultCode:
+                    example: '0000'
+                    type: string
+                  result:
+                    type: object
+                    properties:
+                      topic:
+                        example: A_SAMPLE_TOPIC
+                        type: string
+                      partition:
+                        example: 0
+                        type: integer
+                      offset:
+                        example: 12
+                        type: integer
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/producer
+      security:
+        - apiKeyAuth: []
+  /dockebi/v1/kafka/consumer/topic/{name}:
+    get:
+      summary: Receive messages of a topic given by name
+      operationId: get|kafka/consumer/topic_by_name
+      parameters:
+        - description: topic name
+          in: path
+          name: name
+          required: true
+          schema:
+            example: A_SAMPLE_TOPIC
+            type: string
+        - description: group ID
+          in: query
+          name: groupId
+          required: true
+          schema:
+            example: test-group
+            type: string
+        - description: Set --from-beginning
+          in: query
+          name: fromBeginning
+          required: true
+          schema:
+            example: true
+            type: boolean
+        - description: Poll timeout in Milliseconds
+          in: query
+          name: pollTimeoutInMs
+          required: true
+          schema:
+            example: 500
+            type: integer
+        - name: X-Dockebi-Region
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: message details
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          $ref: '#/components/responses/dockebi_Error400'
+        '500':
+          $ref: '#/components/responses/dockebi_Error500'
+      tags:
+        - dockebi | kafka/consumer
+      security:
+        - apiKeyAuth: []
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
+  schemas:
+    dockebi_Error:
+      description: Error
+      type: object
+      example:
+        resultCode: '9999'
+        result: null
+        reason: XXX Error
+      properties:
+        resultCode:
+          type: string
+        result:
+          type: string
+        reason:
+          type: string
+    dockebi_Stuff:
+      description: stuff information
+      type: object
+      example:
+        id_: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+        name: stuff_name_#1
+        data:
+          key: value
+      properties:
+        id_:
+          example: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+          type: string
+        name:
+          example: stuff_name_#1
+          type: string
+        data:
+          example:
+            key: value
+          type: object
+    dockebi_KafkaMessage:
+      description: Kafka message
+      example:
+        topic: A_SAMPLE_TOPIC
+        key: message_key#1
+        message: a message to send or receive
+        async_: false
+        timeoutInSecond: 60
+      properties:
+        topic:
+          example: A_SAMPLE_TOPIC
+          type: string
+        key:
+          example: message_key#1
+          type: string
+        message:
+          example: a message to send or receive
+          type: string
+        async_:
+          type: boolean
+          description: Determine whether the endpoint works as asynchronously or not
+          example: false
+        timeoutInSecond:
+          type: integer
+          description: Determine max waiting seconds for the response. Works only
+            when async_ is false.
+          example: 60
+    dockebi_KafkaTopic:
+      description: Kafka topic
+      properties:
+        name:
+          type: string
+          example: A_SAMPLE_TOPIC
+        partitionCount:
+          type: integer
+          example: 3
+        replicationFactor:
+          type: integer
+          example: 1
+  parameters:
+    dockebi_PathStuffId:
+      description: ID of the stuff
+      explode: false
+      in: path
+      name: id_
+      required: true
+      schema:
+        example: 3250ef52-b0d9-4167-8d56-a7d7a5525bb4
+        type: string
+      style: simple
+    dockebi_XDummyHeader:
+      name: X-Dummy-Header
+      in: header
+      schema:
+        type: string
+      example: some_dummy_header
+  responses:
+    dockebi_Error400:
+      description: Invalid input parameter
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/dockebi_Error'
+    dockebi_Error500:
+      description: Error due to server
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/dockebi_Error'
+  examples: {}
+  requestBodies: {}
+  headers: {}
+  links: {}
+  callbacks: {}

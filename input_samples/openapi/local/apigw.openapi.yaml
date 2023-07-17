@@ -1,0 +1,44 @@
+openapi: 3.0.3
+info:
+  title: My Cluster API Specification
+  description: "## app : apigw\r\nversion : *0.2*\r\n\r\n***The following is a description\
+    \ of backends exposed by My Cluster API Gateway :***\n"
+  version: '0.2'
+  contact:
+    name: 박현정
+    email: hyunjeong.park@lge.com
+servers:
+  - url: http://localhost:8080
+tags: []
+paths:
+  /__echo/{dummy}:
+    get:
+      parameters:
+        - name: dummy
+          in: path
+          required: true
+          schema:
+            type: string
+            example: hello
+        - name: X-Trace-Id
+          in: header
+          schema:
+            type: string
+            example: f8f78c93-aec7-4d26-a3ab-cb263ddd08b1
+      responses:
+        '200':
+          description: A successful response
+          content:
+            application/json:
+              schema:
+                type: object
+      tags:
+        - apigw | apigw
+      security:
+        - apiKeyAuth: []
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      name: X-Api-Key
+      in: header
