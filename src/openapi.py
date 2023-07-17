@@ -10,7 +10,7 @@ def generate(openapi_path: str, template_path: str, output_path: str):
     def app_title(openapi_file: str):
         app = app if (app := openapi_file.split(".")[0]) != "openapi" else ""
 
-        openapi = load_yaml(os.path.join(first_openapi_dir, openapi_file))
+        openapi = __load_yaml(os.path.join(first_openapi_dir, openapi_file))
 
         return app, openapi["info"]["title"]
 
@@ -21,10 +21,10 @@ def generate(openapi_path: str, template_path: str, output_path: str):
         os.mkdir(destination_path)
 
         for app, title in app_titles:
-            __copy_media(media_type, template_path, destination_path, app, title)
+            __generate(media_type, template_path, destination_path, app, title)
 
 
-def load_yaml(file_path: str) -> dict:
+def __load_yaml(file_path: str) -> dict:
     with open(file_path) as f:
         try:
             return yaml.safe_load(f)
@@ -33,7 +33,7 @@ def load_yaml(file_path: str) -> dict:
             exit(1)
 
 
-def __copy_media(media_type: str, template_path: str, output_path: str, app: str, title: str):
+def __generate(media_type: str, template_path: str, output_path: str, app: str, title: str):
     output_path = os.path.join(output_path, app)
 
     if not os.path.exists(output_path):
@@ -46,7 +46,7 @@ def __copy_media(media_type: str, template_path: str, output_path: str, app: str
         with open(file_path, "w") as f:
             f.write(contents)
 
-    def copy_and_replace(filename):
+    def generate_and_replace(filename):
         shutil.copy(
             os.path.join(template_path, filename),
             (copied := os.path.join(output_path, filename)),
@@ -70,4 +70,4 @@ def __copy_media(media_type: str, template_path: str, output_path: str, app: str
                 )
 
     for file in os.listdir(template_path):
-        copy_and_replace(file)
+        generate_and_replace(file)

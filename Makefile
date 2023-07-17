@@ -43,47 +43,17 @@ build_image: handle_image
 push_image: BUILD_IMAGE_OPTION=--push
 push_image: handle_image
 
-MANIFEST_PATH := ${PWD}/manifest_example
-APIKEY_PATH := ${PWD}/apikeys.example.yaml
-APIKEY_SPEC_PATH := ${PWD}/apikeySpecs.example.yaml
+INPUT_SAMPLES_PATH := ${PWD}/input_samples
+TEMPLATES_PATH := ${PWD}/templates
 OUTPUT_PATH := ${PWD}/output
-VERSION_FOR_TEST := generater_test
-
-check_commitlint:
-	$(eval MAIN := $(shell git ls-remote http://mod.lge.com/code/scm/tcn/manifest-generator.git main | cut -f1))
-	$(eval COMMON := $(shell git merge-base HEAD $(MAIN)))
-	@git log --pretty=format:'%s' --no-merges $(COMMON)^..HEAD | while read -r commit_message; do \
-		echo "Checking commit:" ${YELLOW}"$$commit_message"${COLOR_OFF}; \
-		echo $$commit_message | npx commitlint || exit 1; \
-	done; \
-	exit_status=$$?; \
-	if [ $$exit_status -ne 0 ]; then \
-		echo ${RED}"The branch's commit messages need to be amended!"${COLOR_OFF}; \
-		exit 1; \
-	else \
-		echo ${CYAN}"All commits passed commitlint checks."${COLOR_OFF}; \
-	fi
 
 
 # Should call validate_openapis via ${MAKE}, unless the rules use the old yamls instead of the generated newly
-build_manifest: _prepare
+generate_markdown: _prepare
 	@python src/__main__.py \
-		-m ${MANIFEST_PATH} \
-		-ak ${APIKEY_PATH} \
-		-as ${APIKEY_SPEC_PATH} \
-		-v ${VERSION_FOR_TEST} \
+		-im ${INPUT_SAMPLES_PATH}/markdown/MANIFEST.md \
 		-o ${OUTPUT_PATH} && \
-	echo ${CYAN}"Generation openapi.yaml, krakend.yaml, swagger/redoc media completed"${COLOR_OFF}
-
-validate_apigw:
-	@python src/__main__.py \
-		-c validate_tcn_file \
-		-mf ${MANIFEST_PATH}/apigw/base.openapi.yaml
-
-validate_dockebi:
-	@python src/__main__.py \
-		-c validate_tcn_file \
-		-mf ${MANIFEST_PATH}/dockebi/base.openapi.yaml
+	echo ${CYAN}"Generation a html of a markdown completed"${COLOR_OFF}
 
 _prepare:
 	@rm -rf ${OUTPUT_PATH} && \
