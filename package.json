@@ -9,6 +9,8 @@
   "author": "Hyunjeong Park",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^17.6.6",
+    "@commitlint/config-conventional": "^17.6.6",
     "octokit": "^3.0.0"
   }
 }
