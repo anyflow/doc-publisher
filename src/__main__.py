@@ -9,10 +9,10 @@ def main(args):
     templates_path = os.path.join(os.path.dirname(__file__), "../templates")
 
     if args.openapi_path:
-        openapi.generate(args.openapi_path, templates_path, args.output_path)
+        openapi.generate(args.openapi_path, templates_path, args.openapi_output_path)
 
     if args.markdown_path:
-        _markdown.generate(args.markdown_path, templates_path, args.output_path)
+        _markdown.generate(args.markdown_path, templates_path, args.markdown_output_path)
 
 
 if __name__ == "__main__":
@@ -31,10 +31,16 @@ if __name__ == "__main__":
         help="[INPUT] The root path of markdown file",
     )
     parser.add_argument(
-        "-o",
-        "--output_path",
-        required=True,
-        help="[OUTPUT] The output root path",
+        "-oo",
+        "--openapi_output_path",
+        required=False,
+        help="[OUTPUT] The openapi outputs path",
+    )
+    parser.add_argument(
+        "-om",
+        "--markdown_output_path",
+        required=False,
+        help="[OUTPUT] The markdown output path",
     )
 
     main(parser.parse_args())

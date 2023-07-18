@@ -48,21 +48,31 @@ TEMPLATES_PATH := ${PWD}/templates
 OUTPUT_PATH := ${PWD}/output
 
 
+generate_all: _prepare
+	@python src/__main__.py \
+		-im ${INPUT_SAMPLES_PATH}/changelog/CHANGELOG.md \
+		-om ${OUTPUT_PATH}/changelog \
+		-io ${INPUT_SAMPLES_PATH}/openapi \
+		-oo ${OUTPUT_PATH}/openapi && \
+	echo ${CYAN}"Generation a html of a markdown completed"${COLOR_OFF}
+
 generate_markdown: _prepare
 	@python src/__main__.py \
-		-im ${INPUT_SAMPLES_PATH}/markdown/MANIFEST.md \
-		-o ${OUTPUT_PATH} && \
+		-im ${INPUT_SAMPLES_PATH}/changelog/CHANGELOG.md \
+		-om ${OUTPUT_PATH}/changelog && \
 	echo ${CYAN}"Generation a html of a markdown completed"${COLOR_OFF}
 
 generate_openapis: _prepare
 	@python src/__main__.py \
 		-io ${INPUT_SAMPLES_PATH}/openapi \
-		-o ${OUTPUT_PATH} && \
+		-oo ${OUTPUT_PATH} && \
 	echo ${CYAN}"Generation swagger, redoc of the openapis completed"${COLOR_OFF}
 
 _prepare:
 	@rm -rf ${OUTPUT_PATH} && \
-	mkdir ${OUTPUT_PATH} &&\
+	mkdir ${OUTPUT_PATH} && \
+	mkdir ${OUTPUT_PATH}/changelog && \
+	mkdir ${OUTPUT_PATH}/openapi && \
 	echo ${CYAN}"output directory prepared"${COLOR_OFF}
 
 .PHONY: all

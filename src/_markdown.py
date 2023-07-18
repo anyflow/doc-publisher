@@ -12,7 +12,7 @@ def generate(markdown_path: str, templates_path: str, output_path: str):
         "https://api.github.com/markdown",
         headers={
             "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer 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",
+            "Authorization": "Bearer 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",
             "X-GitHub-Api-Version": "2022-11-28",
         },
         data=json.dumps({"text": markdown}).encode("utf-8"),
