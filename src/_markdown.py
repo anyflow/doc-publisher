@@ -12,11 +12,14 @@ def generate(markdown_path: str, templates_path: str, output_path: str):
         "https://api.github.com/markdown",
         headers={
             "Accept": "application/vnd.github+json",
-            "Authorization": "Bearer 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",
+            "Authorization": "Bearer " + os.getenv('GITHUB_TOKEN'),
             "X-GitHub-Api-Version": "2022-11-28",
         },
         data=json.dumps({"text": markdown}).encode("utf-8"),
     )
+    if response.status_code != 200:
+        print(f"Error: Received a status code {response.status_code} instead of 200")
+        exit(1)
 
     with open(os.path.join(templates_path, 'github/markdown.html'), "r") as f:
         template = f.read()

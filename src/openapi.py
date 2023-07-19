@@ -3,18 +3,20 @@ import shutil
 
 import yaml
 
+DEFAULT_ENVIRONMENT = "kic-st"  # TODO : extract to env var
+
 
 def generate(openapi_path: str, template_path: str, output_path: str):
-    first_openapi_dir = os.path.join(openapi_path, os.listdir(openapi_path)[0])
+    openapi_dir = os.path.join(openapi_path, DEFAULT_ENVIRONMENT)
 
     def app_title(openapi_file: str):
         app = app if (app := openapi_file.split(".")[0]) != "openapi" else ""
 
-        openapi = __load_yaml(os.path.join(first_openapi_dir, openapi_file))
+        openapi = __load_yaml(os.path.join(openapi_dir, openapi_file))
 
         return app, openapi["info"]["title"]
 
-    app_titles = {app_title(openapi_file) for openapi_file in os.listdir(first_openapi_dir)}
+    app_titles = {app_title(openapi_file) for openapi_file in os.listdir(openapi_dir)}
 
     for media_type in ["swaggerui", "redoc"]:
         destination_path = f"{output_path}/{media_type}"

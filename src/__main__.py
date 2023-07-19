@@ -3,6 +3,9 @@ import os
 
 import _markdown
 import openapi
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def main(args):
