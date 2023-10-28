@@ -3,7 +3,7 @@ import shutil
 
 import yaml
 
-DEFAULT_ENVIRONMENT = "kic-st"  # TODO : extract to env var
+DEFAULT_ENVIRONMENT = os.getenv("DEFAULT_ENVIRONMENT")
 
 
 def generate(openapi_path: str, template_path: str, output_path: str):
